@@ -504,6 +504,10 @@ begin
         for I := 1 to L1 do
         begin
           Ci := Token[I];
+
+          if (I = 1) and not (CharInSet(Ci, StConstSymbols10) or CharInSet(Ci, StConstPlusSub)) then
+            goto NotNumber;
+
           if CharInSet(Ci, StConstE) then
             IsScientificNotation := True;
 

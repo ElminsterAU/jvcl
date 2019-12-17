@@ -5869,6 +5869,10 @@ end;
 function TJvInterpreterExpression.Expression2(const ExpType: Word): Variant;
 var
   ErrPos: Integer;
+  {>>>}
+  i64: Int64;
+  i32: Integer;
+  {<<<}
 begin
   ErrPos := PosBeg;
   try
@@ -5879,8 +5883,19 @@ begin
   end;
   if TVarData(Result).VType <> ExpType then
     case ExpType of
-      varInteger:
+      varInteger: {>>>}begin
+        if TVarData(Result).VType in [varSmallint, varShortInt, varByte, varWord, varUInt32, varInt64, varUInt64] then begin
+          i64 := Result;
+          if (i64 >= Low(Integer)) and (i64 <= High(Integer)) then begin
+            i32 := i64;
+            Exit(i32);
+          end;
+        end;
+        {<<<}
         JvInterpreterError(ieIntegerRequired, ErrPos);
+      {>>>}
+      end;
+      {<<<}
       varBoolean:
         JvInterpreterError(ieBooleanRequired, ErrPos);
     else

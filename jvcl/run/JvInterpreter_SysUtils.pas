@@ -1740,6 +1740,10 @@ end;
 procedure RegisterJvInterpreterAdapter(JvInterpreterAdapter: TJvInterpreterAdapter);
 const
   cSysUtils = 'SysUtils';
+{>>>}
+var
+  SR: TSearchRec;
+{<<<}
 begin
   with JvInterpreterAdapter do
   begin
@@ -2032,6 +2036,7 @@ begin
     AddConst(cSysUtils, 'faAnyFile', Ord(faAnyFile));
 
     AddRec(cSysUtils, 'TSearchRec', SizeOf(TSearchRec), [
+	  (*>>>
       RFD('Time', 0, varInteger),
       RFD('Size', 4, varInteger),     // Supports only integer size
       {$IFDEF DELPHI10_UP}
@@ -2045,6 +2050,14 @@ begin
       RFD('ExcludeAttr', 16, varInteger),
       RFD('FindHandle', 20, varInteger)
       {$ENDIF}
+      *)
+      RFD('Time', NativeInt(@SR.Time)-NativeInt(@SR), varInteger),
+      RFD('Size', NativeInt(@SR.Size)-NativeInt(@SR), varInteger),     // Supports only integer size
+      RFD('Attr', NativeInt(@SR.Attr)-NativeInt(@SR), varInteger),
+      RFD('Name', NativeInt(@SR.Name)-NativeInt(@SR), varString),
+      RFD('ExcludeAttr', NativeInt(@SR.ExcludeAttr)-NativeInt(@SR), varInteger),
+      RFD('FindHandle', NativeInt(@SR.FindHandle)-NativeInt(@SR), varInteger)
+	  {<<<}
       ],
       JvInterpreter_NewTSearchRec, JvInterpreter_DisposeTSearchRec, nil);
     { regional options }
