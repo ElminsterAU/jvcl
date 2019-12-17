@@ -464,13 +464,16 @@ begin
 end;
 
 procedure GetHintTitleFont(AFont: TFont);
+(** )
 {$IFDEF JVCLThemesEnabled}
 var
   AThemedTextColor: Integer;
   Result: Boolean;
   LogFontW: TLogFontW;
 {$ENDIF JVCLThemesEnabled}
+(**)
 begin
+  (** )
   {$IFDEF JVCLThemesEnabled}
   if IsWinVista_UP and StyleServices.Enabled then
   begin
@@ -490,6 +493,7 @@ begin
     end;
   end;
   {$ENDIF JVCLThemesEnabled}
+  (**)
   AFont.Assign(Screen.HintFont);
   AFont.Style := AFont.Style + [fsBold];
 end;
@@ -648,7 +652,7 @@ begin
   { bpAuto returns the same value as bpLeftDown; bpLeftDown is choosen
     arbitrary }
   FCurrentPosition := bpLeftDown;
-  ScreenRect := WorkAreaRect;
+  ScreenRect := {>>>WorkAreaRect}DesktopRect{<<<};
 
   { Note: 2*(Left + Width div 2) = 2*(Left + (Right-Left) div 2) ~=
           2*Left + (Right-Left) = Left + Right;
@@ -886,7 +890,7 @@ begin
     CalcAutoPosition(ARect);
 
   NewPosition := FCurrentPosition;
-  ScreenRect := WorkAreaRect;
+  ScreenRect := {>>>WorkAreaRect}DesktopRect{<<<};
 
   if ARect.Bottom > ScreenRect.Bottom - ScreenRect.Top then
   begin
@@ -1248,7 +1252,7 @@ begin
     Exit;
 
   {$IFDEF JVCLThemesEnabled}
-  if IsWinVista_UP and StyleServices.Enabled then
+  if IsWinVista_UP and StyleServices.Enabled and FIsMultiLineMsg then
     Region := CreateThemedRegion
   else
   {$ENDIF JVCLThemesEnabled}
