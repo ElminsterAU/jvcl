@@ -504,6 +504,12 @@ begin
         for I := 1 to L1 do
         begin
           Ci := Token[I];
+
+          {>>>}
+          if (I = 1) and not (CharInSet(Ci, StConstSymbols10) or CharInSet(Ci, StConstPlusSub)) then
+            goto NotNumber;
+          {<<<}
+
           // Scientific notation requires that before the E/e at least one digit
           // is present, so we can only begin checking from the 2nd char onwards
           if (I > 1) and
