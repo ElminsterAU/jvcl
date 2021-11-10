@@ -157,6 +157,7 @@ type
     property BeepOnError;
     { designtime properties SPECIFIC to only JvDBMaskEdit: }
     property EditMask: string read GetEditMask write SetEditMask;
+    property OnButtonClick;
     property OnChange;
     property OnClick;
     property OnContextPopup;
@@ -275,6 +276,7 @@ type
     property ParentShowHint;
     property PopupMenu;
     property ReadOnly: Boolean read GetReadOnly write SetReadOnly default False;
+    property ShowButton;
     property ShowHint;
     property TabOrder;
     property TabStop;
@@ -418,6 +420,7 @@ type
     property PopupColor;
     property PopupMenu;
     property ShowHint;
+    property ShowButton;
     property CalendarStyle;
     property ShowNullDate;
     property StartOfWeek;
