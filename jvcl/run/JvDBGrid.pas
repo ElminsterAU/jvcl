@@ -2881,7 +2881,7 @@ begin
       OnColumnResized(Self, FSizingIndex + Byte(not (dgIndicator in Options)) - 1,
         ColWidths[FSizingIndex]);
   end
-  else
+  else if FCurrentControl = nil then
   begin
     OriginalScrollInfo.cbSize := SizeOf(OriginalScrollInfo);
     OriginalScrollInfo.fMask := SIF_POS;
@@ -3828,7 +3828,12 @@ begin
       if LookupInfo.IsLookup and LookupInfoValid(LookupInfo) then
       begin
         I := 1;
+        { Delphi 2006 and 2007 prefer the "WideString" overload and deprecated the (Ansi)String overload. }
+        {$IFDEF COMPILER10} {$WARN SYMBOL_DEPRECATED OFF} {$ENDIF COMPILER10}
+        {$IFDEF COMPILER11} {$WARN SYMBOL_DEPRECATED OFF} {$ENDIF COMPILER11}
         ReadOnlyTestField := Field.DataSet.FieldByName(ExtractFieldName(LookupInfo.KeyFields, I));
+        {$IFDEF COMPILER10} {$WARN SYMBOL_DEPRECATED ON} {$ENDIF COMPILER10}
+        {$IFDEF COMPILER11} {$WARN SYMBOL_DEPRECATED ON} {$ENDIF COMPILER11}
         { Lookup fields do not have a FieldNo. In this case CanModify returns False }
         if ReadOnlyTestField.CanModify and CanEditCell(ReadOnlyTestField) then
           Canvas.Brush.Color := NewBackgrnd
