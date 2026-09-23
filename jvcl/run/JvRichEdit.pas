@@ -49,6 +49,7 @@ uses
   Windows, ActiveX, ComObj, CommCtrl, Messages, SysUtils, Classes, Controls,
   OleCtnrs,
   Forms, Graphics, StdCtrls, Dialogs, RichEdit, Menus, ComCtrls, SyncObjs,
+  JclBase,
   JvExStdCtrls, JvTypes;
 
 const
@@ -845,7 +846,7 @@ type
   end;
 
   {$IFDEF RTL230_UP}
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
+  [ComponentPlatformsAttribute(pidWin32 or pidWin64{$IFDEF RTL360_UP} or pidWin64x{$ENDIF RTL360_UP})]
   {$ENDIF RTL230_UP}
   TJvRichEdit = class(TJvCustomRichEdit)
   published
@@ -1135,9 +1136,9 @@ type
 
   TConversionFormatList = class(TObjectList)
   private
-    FRTFConvIndex: Integer;
-    FTextConvIndex: Integer;
-    function GetItem(Index: Integer): TJvConversion;
+    FRTFConvIndex: TJclListSize;
+    FTextConvIndex: TJclListSize;
+    function GetItem(Index: TJclListSize): TJvConversion;
   public
     constructor Create; virtual;
     { GetConverter implicitly calls Result.Init, thus caller must call Result.Done }
@@ -1147,7 +1148,7 @@ type
       const Kind: TJvConversionKind): TJvConversion; overload;
     function GetFilter(const AKind: TJvConversionKind): string;
     function DefaultConverter: TJvConversion;
-    property Items[Index: Integer]: TJvConversion read GetItem {write SetItem}; default;
+    property Items[Index: TJclListSize]: TJvConversion read GetItem {write SetItem}; default;
   end;
 
   TImageDataObject = class(TInterfacedObject, IDataObject)
@@ -2298,7 +2299,7 @@ begin
     System.Delete(Result, Length(Result), 1);
 end;
 
-function TConversionFormatList.GetItem(Index: Integer): TJvConversion;
+function TConversionFormatList.GetItem(Index: TJclListSize): TJvConversion;
 begin
   Result := inherited Items[Index] as TJvConversion;
 end;

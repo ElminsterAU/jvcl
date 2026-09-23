@@ -2,14 +2,14 @@
     <PropertyGroup>
         <ProjectGuid>{DD2CB040-B066-4061-B05C-1F1CD0FD0D5D}</ProjectGuid>
         <MainSource>JvBands.dpk</MainSource>
-        <ProjectVersion>20.0</ProjectVersion>
+        <ProjectVersion>20.2</ProjectVersion>
         <Config Condition="'$(Config)'==''">Release</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <AppType>Package</AppType>
-        <TargetedPlatforms>3</TargetedPlatforms>
+        <TargetedPlatforms>1048579</TargetedPlatforms>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -96,7 +96,7 @@
                     <VersionInfo Name="IncludeVerInfo">True</VersionInfo>
                     <VersionInfo Name="AutoIncBuild">False</VersionInfo>
                     <VersionInfo Name="MajorVer">3</VersionInfo>
-                    <VersionInfo Name="MinorVer">41</VersionInfo>
+                    <VersionInfo Name="MinorVer">51</VersionInfo>
                     <VersionInfo Name="Release">0</VersionInfo>
                     <VersionInfo Name="Build">0</VersionInfo>
                     <VersionInfo Name="Debug">False</VersionInfo>
@@ -110,14 +110,14 @@
                 <VersionInfoKeys>
                     <VersionInfoKeys Name="CompanyName">Project JEDI</VersionInfoKeys>
                     <VersionInfoKeys Name="FileDescription">JVCL Band Objects Runtime Package</VersionInfoKeys>
-                    <VersionInfoKeys Name="FileVersion">3.41.0.0</VersionInfoKeys>
+                    <VersionInfoKeys Name="FileVersion">3.51.0.0</VersionInfoKeys>
                     <VersionInfoKeys Name="InternalName">JvBands</VersionInfoKeys>
-                    <VersionInfoKeys Name="LegalCopyright">Copyright (C) 1999, 2013 Project JEDI</VersionInfoKeys>
+                    <VersionInfoKeys Name="LegalCopyright">Copyright (C) 1999, 2025 Project JEDI</VersionInfoKeys>
                     <VersionInfoKeys Name="LegalTrademarks"/>
                     <VersionInfoKeys Name="OriginalFilename">JvBands290.bpl</VersionInfoKeys>
                     <VersionInfoKeys Name="ProductName">JEDI Visual Component Library</VersionInfoKeys>
-                    <VersionInfoKeys Name="ProductVersion">3.41.0.0</VersionInfoKeys>
-                    <VersionInfoKeys Name="Comments">3.41 Build 0</VersionInfoKeys>
+                    <VersionInfoKeys Name="ProductVersion">3.51.0.0</VersionInfoKeys>
+                    <VersionInfoKeys Name="Comments">3.51 Build 0</VersionInfoKeys>
                 </VersionInfoKeys>
                 <Source>
                     <Source Name="MainSource">JvBands.dpk</Source>
@@ -129,6 +129,7 @@
                 <Platform value="OSX32">False</Platform>
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">True</Platform>
+                <Platform value="Win64x">True</Platform>
             </Platforms>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>

@@ -710,7 +710,7 @@ type
     In the above scheme, both 'HKCU\<path>' as well as 'HKEY_CURRENT_USER'<path>' will link to
     asRegStoreHKCU, ie. HKCU and HKEY_CURRENT_USER are aliases of each other. }
   {$IFDEF RTL230_UP}
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64 or pidOSX32)]
+  [ComponentPlatformsAttribute(pidWin32 or pidWin64 or pidOSX32{$IFDEF RTL360_UP} or pidWin64x{$ENDIF RTL360_UP})]
   {$ENDIF RTL230_UP}
   TJvAppStorage = class(TJvCustomAppStorage)
   protected
@@ -923,7 +923,7 @@ type
     FOnGetFileName: TJvAppStorageGetFileNameEvent;
     FPhysicalReadOnly: Boolean;
     FFileLoaded: Boolean;
-    {$IFDEF DELPHI2005_UP}
+    {$IFDEF DELPHI2006_UP}
     FFileAge: TDateTime;
     {$ELSE}
     FFileAge: Integer;
@@ -3705,12 +3705,12 @@ begin
 end;
 
 function TJvCustomAppMemoryFileStorage.ReloadNeeded: Boolean;
-{$IFDEF DELPHI2005_UP}
+{$IFDEF DELPHI2006_UP}
 var t : TDateTime;
 {$ENDIF}
 begin
   Result := (not FFileLoaded or AutoReload) and not IsUpdating;
-  {$IFDEF DELPHI2005_UP}
+  {$IFDEF DELPHI2006_UP}
   if Result and FileAge(FullFileName, t) then
     Result := FFileAge <> t;
   {$ELSE}
@@ -3867,8 +3867,9 @@ begin
   begin
     FFileLoaded := True;
     FPhysicalReadOnly := FileExists(FullFileName) and FileIsReadOnly(FullFileName);
-    {$IFDEF DELPHI2005_UP}
-    FileAge(FullFileName, FFileAge);
+    {$IFDEF DELPHI2006_UP}
+    if not FileAge(FullFileName, FFileAge) then
+      FFileAge := -1;
     {$ELSE}
     FFileAge:= FileAge(FullFileName);
     {$ENDIF}

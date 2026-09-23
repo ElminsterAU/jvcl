@@ -118,7 +118,7 @@ type
     FPaintControl: TPaintControl;
     FBeepOnError: Boolean;
     FResetValue: Boolean;
-    FUpdateFieldImmediatelly: Boolean;
+    FUpdateFieldImmediately: Boolean;
     FListSettings: TJvDBComboBoxListSettings;
     FValues: TStringList;
     FEnableValues: Boolean;
@@ -188,19 +188,20 @@ type
     property Field: TField read GetField;
     property Items write SetItems;
     property Text;
-    property UpdateFieldImmediatelly: Boolean read FUpdateFieldImmediatelly write FUpdateFieldImmediatelly default False;
+    property UpdateFieldImmediately: Boolean read FUpdateFieldImmediately write FUpdateFieldImmediately default False;
     property PreserveItemSelectionOnInsert: Boolean read FPreserveItemSelectionOnInsert write FPreserveItemSelectionOnInsert default False;
     property CaseSensitiveValues: Boolean read GetCaseSensitiveValues write SetCaseSensitiveValues default false;
   end;
 
   {$IFDEF RTL230_UP}
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
+  [ComponentPlatformsAttribute(pidWin32 or pidWin64{$IFDEF RTL360_UP} or pidWin64x{$ENDIF RTL360_UP})]
   {$ENDIF RTL230_UP}
   TJvDBComboBox = class(TJvCustomDBComboBox)
   private
     { The "AutoSize" property was published what it never should have been. TComboBox doesn't
       support it and TJvCustomComboBox/TJvDBCustomComboBox do not support it either. }
     procedure ReadIgnoredBoolean(Reader: TReader);
+    procedure ReadOldUpdateFieldImmediately(Reader: TReader);
   protected
     procedure DefineProperties(Filer: TFiler); override;
   published
@@ -240,7 +241,7 @@ type
     property Sorted;
     property TabOrder;
     property TabStop;
-    property UpdateFieldImmediatelly;
+    property UpdateFieldImmediately;
     property Values;
     property Visible;
     property CaseSensitiveValues;
@@ -264,6 +265,11 @@ type
     property OnContextPopup;
     property OnEndDock;
     property OnStartDock;
+
+    {$IFDEF COMPILER14_UP}
+    property Touch;
+    {$ENDIF COMPILER14_UP}
+    property TextHint;
   end;
 
 {$IFDEF UNITVERSIONING}
@@ -446,7 +452,7 @@ end;
 procedure TJvCustomDBComboBox.Change;
 begin
   FDataLink.Edit;
-  if UpdateFieldImmediatelly then
+  if UpdateFieldImmediately then
     FDataLink.UpdateRecord;
   inherited Change;
   FDataLink.Modified;
@@ -455,7 +461,7 @@ end;
 procedure TJvCustomDBComboBox.Click;
 begin
   FDataLink.Edit;
-  if UpdateFieldImmediatelly then
+  if UpdateFieldImmediately then
     FDataLink.UpdateRecord;
   inherited Click;
   FDataLink.Modified;
@@ -526,7 +532,7 @@ begin
     Esc:
       begin
         FDataLink.Reset;
-        if UpdateFieldImmediatelly and (FDataLink.Field <> nil) and FDataLink.Editing then
+        if UpdateFieldImmediately and (FDataLink.Field <> nil) and FDataLink.Editing then
           FDataLink.Field.Value := FDataLink.Field.OldValue;
         SelectAll;
       end;
@@ -691,6 +697,13 @@ var
   OldFont: HFONT;
   Index: Integer;
 begin
+  { Avoid data access during component destruction - can cause AV if dataset is closing }
+  if csDestroying in ComponentState then
+  begin
+    inherited;
+    Exit;
+  end;
+
   { If the field value is not part of the DataSource }
   if (Style in [csDropDownList, csOwnerDrawFixed, csOwnerDrawVariable]) and
      ListSettings.ShowOutfilteredValue and (ItemIndex = -1) and
@@ -1034,7 +1047,7 @@ begin
   begin
     FFilter := Value;
     ComboBox.UpdateDropDownItems;
-    if ComboBox.UpdateFieldImmediatelly then
+    if ComboBox.UpdateFieldImmediately then
       ComboBox.DataChange(Self);
   end;
 end;
@@ -1094,7 +1107,7 @@ begin
   if FListDataLink.Active and (DataSource.State = dsBrowse) then
   begin
     ComboBox.UpdateDropDownItems;
-    if ComboBox.UpdateFieldImmediatelly then
+    if ComboBox.UpdateFieldImmediately then
       ComboBox.DataChange(Self);
   end;
 end;
@@ -1106,10 +1119,17 @@ begin
   Reader.ReadBoolean;
 end;
 
+procedure TJvDBComboBox.ReadOldUpdateFieldImmediately(Reader: TReader);
+begin
+  FUpdateFieldImmediately := Reader.ReadBoolean;
+end;
+
 procedure TJvDBComboBox.DefineProperties(Filer: TFiler);
 begin
   inherited DefineProperties(Filer);
   Filer.DefineProperty('AutoSize', ReadIgnoredBoolean, nil, False);
+  // Read DFM with typo in property name and set the correct field.
+  Filer.DefineProperty('UpdateFieldImmediatelly', ReadOldUpdateFieldImmediately, nil, False);
 end;
 
 {$IFDEF UNITVERSIONING}

@@ -171,7 +171,7 @@ type
   end;
 
   {$IFDEF RTL230_UP}
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
+  [ComponentPlatformsAttribute(pidWin32 or pidWin64{$IFDEF RTL360_UP} or pidWin64x{$ENDIF RTL360_UP})]
   {$ENDIF RTL230_UP}
   TJvComboBox = class(TJvCustomComboBox)
   published
@@ -244,6 +244,11 @@ type
     property OnMouseEnter;
     property OnMouseLeave;
     property OnParentColorChange;
+
+    {$IFDEF COMPILER14_UP}
+    property Touch;
+    {$ENDIF COMPILER14_UP}
+    property TextHint;
   end;
 
   TJvCHBQuoteStyle = (qsNone, qsSingle, qsDouble);
@@ -336,7 +341,7 @@ type
   end;
 
   {$IFDEF RTL230_UP}
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
+  [ComponentPlatformsAttribute(pidWin32 or pidWin64{$IFDEF RTL360_UP} or pidWin64x{$ENDIF RTL360_UP})]
   {$ENDIF RTL230_UP}
   TJvCheckedComboBox = class(TJvCustomCheckedComboBox)
   published

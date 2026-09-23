@@ -250,7 +250,7 @@ type
   end;
 
   {$IFDEF RTL230_UP}
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
+  [ComponentPlatformsAttribute(pidWin32 or pidWin64{$IFDEF RTL360_UP} or pidWin64x{$ENDIF RTL360_UP})]
   {$ENDIF RTL230_UP}
   TJvDatePickerEdit = class(TJvCustomDatePickerEdit)
   public
@@ -381,6 +381,7 @@ uses
 
 const
   DateMaskSuffix = '!;1;_';
+  DefaultShortCutAltDel = $802E; // TextToShortCut('Alt+Del') / ShortCut(VK_DELETE, [ssAlt])
 
 //=== { TJvCustomDatePickerEdit } ============================================
 
@@ -658,7 +659,7 @@ begin
   FEnableValidation := True;
   //  FMaxYear := 2900;
   //  FMinYear := 1800;
-  FNoDateShortcut := TextToShortCut(RsDefaultNoDateShortcut);
+  FNoDateShortcut := DefaultShortCutAltDel;
   FNoDateText := '';
   FStoreDate := False;
   FStoreDateFormat := False;
@@ -990,7 +991,7 @@ end;
 
 function TJvCustomDatePickerEdit.IsNoDateShortcutStored: Boolean;
 begin
-  Result := (NoDateShortcut <> TextToShortCut(RsDefaultNoDateShortcut));
+  Result := NoDateShortcut <> DefaultShortCutAltDel;
 end;
 
 function TJvCustomDatePickerEdit.IsNoDateTextStored: Boolean;

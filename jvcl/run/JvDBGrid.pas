@@ -224,7 +224,7 @@ type
   end;
 
   {$IFDEF RTL230_UP}
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64)]
+  [ComponentPlatformsAttribute(pidWin32 or pidWin64{$IFDEF RTL360_UP} or pidWin64x{$ENDIF RTL360_UP})]
   {$ENDIF RTL230_UP}
   TJvDBGrid = class(TJvExDBGrid, IJvDataControl)
   private
@@ -2890,7 +2890,12 @@ begin
     LockWindowUpdate(Handle);
     try
       inherited MouseUp(Button, Shift, X, Y);
-      Perform(WM_HSCROLL, MakeWParam(SB_THUMBPOSITION, OriginalScrollInfo.nPos), 0); //Repos
+      // If the form or a parent control was closed in OnMouseDown/OnDblClick we end up throwing a "Cannot focus"
+      // EInvalidOperation in TCustomGrid.ModifyScrollBar.
+      // "if Showing then" does not work because the parent form's "Showing" is false but the grid still has
+      // Showing=True.
+      if HandleAllocated and IsWindowVisible(Handle) then
+        Perform(WM_HSCROLL, MakeWParam(SB_THUMBPOSITION, OriginalScrollInfo.nPos), 0); //Repos
     finally
       LockWindowUpdate(0);
     end;
