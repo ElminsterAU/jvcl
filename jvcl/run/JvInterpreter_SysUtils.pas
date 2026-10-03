@@ -2051,7 +2051,9 @@ begin
       RFD('FindHandle', 20, varInteger)
       {$ENDIF}
       *)
+      {$WARN SYMBOL_DEPRECATED OFF}
       RFD('Time', NativeInt(@SR.Time)-NativeInt(@SR), varInteger),
+      {$WARN SYMBOL_DEPRECATED DEFAULT}
       RFD('Size', NativeInt(@SR.Size)-NativeInt(@SR), varInteger),     // Supports only integer size
       RFD('Attr', NativeInt(@SR.Attr)-NativeInt(@SR), varInteger),
       RFD('Name', NativeInt(@SR.Name)-NativeInt(@SR), varString),
