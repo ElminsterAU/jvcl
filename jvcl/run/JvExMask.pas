@@ -251,6 +251,8 @@ const
 implementation
 
 uses
+  Vcl.Themes,
+
   JclSysInfo;
 
 {$IFNDEF COMPILER12_UP}

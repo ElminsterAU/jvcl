@@ -511,7 +511,12 @@ const
 implementation
 
 uses
-  Math, JvJCLUtils, JvJVCLUtils;
+  System.Math,
+
+  Vcl.Themes,
+
+  JvJCLUtils,
+  JvJVCLUtils;
 
 type
   TJvGlyphList = class;
